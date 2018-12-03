@@ -26,7 +26,10 @@ try:
                 MerakiNetwork = merakiapjson['config']['network_name']
                 MerakiAP = merakiapjson['config']['node_name']
                 MerakiModel = merakiapjson['config']['product_model']
-                MerakiAPIP = merakiapjson['connection_state']['wired_ip']
+                try:
+                        MerakiAPIP = merakiapjson['connection_state']['wired_ip']
+                except:
+                        MerakiAPIP = "No IP(Mesh)"
                 if SignaldB >= '29':
                         print (APNameStart, MerakiAP, FieldEnd, APIPStart, MerakiAPIP, FieldEnd, APModelStart, MerakiModel, FieldEnd,  SNRGoodStart, SignaldB,"dB",SNREnd, APNetworkStart, MerakiNetwork, EndLine)
                 elif '19' <= SignaldB < '29':
