@@ -1,10 +1,11 @@
-# MerakiUebersichtBold
+# MerakiUebersichtColorized
 
-Bold Format
+Colorized Format
 ![Example](/Example.png)
 
 An Uebersicht Widget for Wifi Data and Meraki Connectivity
 
+Description: Displays Wifi Data in an easy to read format Displays connectivity data for any Meraki APs, Switches, or Firewalls that you are connected behind
 
 Requirements:
 1. Download and install Uebersicht - [Uebersicht Webpage](http://tracesof.net/uebersicht/)
