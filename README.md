@@ -1,7 +1,7 @@
 # MerakiUebersichtBold
 
 Bold Format
-![Example](/screenshot.jpg)
+![Example](/Example.png)
 
 An Uebersicht Widget for Wifi Data and Meraki Connectivity
 
