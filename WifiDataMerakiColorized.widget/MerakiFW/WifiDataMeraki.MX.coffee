@@ -14,7 +14,7 @@ style: """
   text-align: justify
 
   h1
-    font-size: 1.2em
+    font-size: 1em
     font-weight: 100
     margin: 0
     padding: 0
