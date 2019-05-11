@@ -18,7 +18,7 @@ style: """
   padding: 5px
 
   h1
-    font-size: 1em
+    font-size: .75 em
     font-weight: 100
     margin: 0
     padding: 0
