@@ -2,8 +2,6 @@
 ######################## By Alex Burger ############################################################################
 ######################## 12-01-2018 ################################################################################
 import re
-import ast
-import json
 import subprocess
 ####################################################################################################################
 wificommand = subprocess.Popen(['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I'], stdout=subprocess.PIPE)
@@ -65,7 +63,8 @@ if wifidisconnected not in wifioutput:
 # Channel --------------------------------------------#
                 elif re.search(r'channel', line):
                         channel = line,
-        channelnumber = formatData(channel, 'channel')
+                        channelnumber = formatData(channel, 'channel')
+                        
         Channel = channelnumber.split(',')[0]
         for line in channelnumber:
                 if re.search(r'[0-9]{1,3}\b,1$', channelnumber):

@@ -12,6 +12,9 @@ style: """
   left: 5
   top: 70px
   text-align: justify
+  background-color: rgba(0, 0, 0, 0.6)
+  margin-left: 10px
+  padding: 5px
 
   h1
     font-size: 1em
