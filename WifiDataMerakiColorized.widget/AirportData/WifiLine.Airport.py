@@ -26,63 +26,46 @@ MCSStart = "MCS:<strong>"
 ChannelStart = "Channel:<strong>"
 ChWidthStart = "Ch Width:<strong>"
 ChWidthEnd = "MHz</strong>"
-####################################################################################################################
-if wifidisconnected not in wifioutput:
-        for line in wifioutput:
-            if re.search(r'agrCtlRSSI', line):
-                signal = line,
+# print(wifioutput[0])
+# print('_____________________________________________________________________')
+# print(str(wifioutputnosplit))
+
+# format data for use ----------------------------------------------#
+def formatData(signal, prop):
         tuplesignal = [tuple(i.split(': ')) for i in signal]
         signaldict = dict((x, y) for x, y in tuplesignal)
         signaldict = {k.replace(" ",""): v for k,v in signaldict.items()}
-        RSSI = signaldict['agrCtlRSSI']
+        return signaldict[prop]
 ####################################################################################################################
+if wifidisconnected not in wifioutput:
         for line in wifioutput:
-            if re.search(r'agrCtlNoise', line):
-              noise = line,
-        tuplenoise = [tuple(i.split(': ')) for i in noise]
-        noisedict = dict((x, y) for x, y in tuplenoise)
-        noisedict = {k.replace(" ",""): v for k,v in noisedict.items()}
-        NoiseFloor = noisedict['agrCtlNoise']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'\bSSID', line):
-                ssid = line,
-        tuplessid = [tuple(i.split(': ')) for i in ssid]
-        ssiddict = dict((x, y) for x, y in tuplessid)
-        ssiddict = {k.replace(" ",""): v for k,v in ssiddict.items()}
-        SSID = ssiddict['SSID']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'BSSID', line):
-                bssid = line,
-        tuplebssid = [tuple(i.split(': ')) for i in bssid]
-        bssiddict = dict((x, y) for x, y in tuplebssid)
-        bssiddict = {k.replace(" ",""): v for k,v in bssiddict.items()}
-        BSSID = bssiddict['BSSID']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'lastTxRate', line):
-                txrate = line,
-        tupletxrate = [tuple(i.split(': ')) for i in txrate]
-        txratedict = dict((x, y) for x, y in tupletxrate)
-        txratedict = {k.replace(" ",""): v for k,v in txratedict.items()}
-        TxRate = txratedict['lastTxRate']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'MCS', line):
-                MCSrate = line,
-        tupleMCSrate = [tuple(i.split(': ')) for i in MCSrate]
-        MCSratedict = dict((x, y) for x, y in tupleMCSrate)
-        MCSratedict = {k.replace(" ",""): v for k,v in MCSratedict.items()}
-        MCSRate = MCSratedict['MCS']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'channel', line):
-                channel = line,
-        tuplechannel = [tuple(i.split(': ')) for i in channel]
-        channeldict = dict((x, y) for x, y in tuplechannel)
-        channeldict = {k.replace(" ",""): v for k,v in channeldict.items()}
-        channelnumber = channeldict['channel']
+                if re.search(r'agrCtlRSSI', line):
+                        signal = line,
+                        RSSI = formatData(signal, 'agrCtlRSSI')
+# RSSI ----------------------------------------------#
+                elif re.search(r'agrCtlNoise', line):
+                        noise = line,
+                        NoiseFloor = formatData(noise, 'agrCtlNoise')
+# SSID ----------------------------------------------#
+                elif re.search(r'\bSSID', line):
+                        ssid = line,
+                        SSID = formatData(ssid, 'SSID')
+# BSSID ---------------------------------------------#
+                elif re.search(r'BSSID', line):
+                        bssid = line,
+                        BSSID = formatData(bssid, 'BSSID')
+# TxRate ---------------------------------------------#
+                elif re.search(r'lastTxRate', line):
+                        txrate = line,
+                        TxRate = formatData(txrate, 'lastTxRate')
+# MCS ------------------------------------------------#
+                elif re.search(r'MCS', line):
+                        MCSrate = line,
+                        MCSRate = formatData(MCSrate, 'MCS')
+# Channel --------------------------------------------#
+                elif re.search(r'channel', line):
+                        channel = line,
+        channelnumber = formatData(channel, 'channel')
         Channel = channelnumber.split(',')[0]
         for line in channelnumber:
                 if re.search(r'[0-9]{1,3}\b,1$', channelnumber):
@@ -109,7 +92,7 @@ if wifidisconnected not in wifioutput:
                 NoiseFloorStart = NoiseFloorBadStart
 ############################# This is where the text output is formatted ###########################################
         print (RSSIGoodStart, RSSI, "dBm", FontEnd, NoiseFloorStart, NoiseFloor, "dB", FontEnd, SSIDStart, SSID, FieldEnd, BSSIDStart, BSSID, FieldEnd, TxRateStart, TxRate, "Mbps", FieldEnd, MCSStart, MCSRate, FieldEnd, ChannelStart, Channel, FieldEnd, ChWidthStart, channelwidth, ChWidthEnd)
-####################################################################################################################
+############################ Main if else statement #####################################################################
 else:
         print("Disconnected")
 ####################################################################################################################
