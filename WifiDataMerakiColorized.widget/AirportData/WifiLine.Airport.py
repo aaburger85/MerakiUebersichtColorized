@@ -72,7 +72,8 @@ if wifidisconnected not in wifioutput:
         else:
                 NoiseFloorStart = status[2]
 ############################# This is where the text output is formatted ###########################################
-        print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" % (RSSIStart, RSSI, NoiseFloorStart, NoiseFloor, SSID, BSSID, TxRate, MCSRate, channelnumber, channelwidth))
+        print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" 
+        % (RSSIStart, RSSI, NoiseFloorStart, NoiseFloor, SSID, BSSID, TxRate, MCSRate, channelnumber, channelwidth))
 ############################ Main if else statement #####################################################################
 else:
         print("Disconnected")
