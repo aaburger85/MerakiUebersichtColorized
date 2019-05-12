@@ -8,22 +8,7 @@ wificommand = subprocess.Popen(['/System/Library/PrivateFrameworks/Apple80211.fr
 wifioutputnosplit = wificommand.stdout.read()
 wifioutput = wifioutputnosplit.decode('UTF-8').splitlines()
 wifidisconnected = 'AirPort: Off'
-RSSIGoodStart = "RSSI:<strong><font color='lightgreen'>"
-RSSIOKStart = "RSSI:<strong><font color='yellow'>"
-RSSIBadStart = "RSSI:<strong><font color='red'>"
-FontEnd = "</font></strong>|"
-NoiseFloorStart = "Noise Floor:<strong>"
-NoiseFloorGoodStart = "Noise Floor:<strong><font color='lightgreen'>"
-NoiseFloorOKStart = "Noise Floor:<strong><font color='yellow'>"
-NoiseFloorBadStart = "Noise Floor:<strong><font color='red'>"
-FieldEnd = "</strong>|"
-SSIDStart = "SSID:<strong>"
-BSSIDStart = "BSSID:<strong>"
-TxRateStart = "TxRate:<strong>"
-MCSStart = "MCS:<strong>"
-ChannelStart = "Channel:<strong>"
-ChWidthStart = "Ch Width:<strong>"
-ChWidthEnd = "MHz</strong>"
+status= ('lightgreen','yellow','red')
 # print(wifioutput[0])
 # print('_____________________________________________________________________')
 # print(str(wifioutputnosplit))
@@ -77,20 +62,20 @@ if wifidisconnected not in wifioutput:
                         channelwidth = 20
 ############################# RSSI Coloring ########################################################################
         if RSSI <= '-67':        
-                RSSIStart = RSSIGoodStart
+                RSSIStart = status[0]
         elif '-67'< RSSI <= '-75':
-                RSSIStart = RSSIOKStart
+                RSSIStart = status[1]
         else:
-                RSSIStart = RSSIBadStart
+                RSSIStart = status[2]
 ####################### Noise Floor Coloring #######################################################################
         if NoiseFloor >= '-90':
-                NoiseFloorStart = NoiseFloorGoodStart
+                NoiseFloorStart = status[0]
         elif '-90' > NoiseFloor >= '-85':
-                NoiseFloorStart = NoiseFloorOKStart 
+                NoiseFloorStart = status[1] 
         else:
-                NoiseFloorStart = NoiseFloorBadStart
+                NoiseFloorStart = status[2]
 ############################# This is where the text output is formatted ###########################################
-        print (RSSIGoodStart, RSSI, "dBm", FontEnd, NoiseFloorStart, NoiseFloor, "dB", FontEnd, SSIDStart, SSID, FieldEnd, BSSIDStart, BSSID, FieldEnd, TxRateStart, TxRate, "Mbps", FieldEnd, MCSStart, MCSRate, FieldEnd, ChannelStart, Channel, FieldEnd, ChWidthStart, channelwidth, ChWidthEnd)
+        print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" % (RSSIStart, RSSI, NoiseFloorStart, NoiseFloor, SSID, BSSID, TxRate, MCSRate, channelnumber, channelwidth))
 ############################ Main if else statement #####################################################################
 else:
         print("Disconnected")
