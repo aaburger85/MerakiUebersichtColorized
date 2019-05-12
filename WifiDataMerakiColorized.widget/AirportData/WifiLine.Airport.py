@@ -9,9 +9,6 @@ wifioutputnosplit = wificommand.stdout.read()
 wifioutput = wifioutputnosplit.decode('UTF-8').splitlines()
 wifidisconnected = 'AirPort: Off'
 status= ('lightgreen','yellow','red')
-# print(wifioutput[0])
-# print('_____________________________________________________________________')
-# print(str(wifioutputnosplit))
 
 # format data for use ----------------------------------------------#
 def formatData(signal, prop):
