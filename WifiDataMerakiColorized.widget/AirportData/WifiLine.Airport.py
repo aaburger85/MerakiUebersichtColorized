@@ -32,7 +32,7 @@ ChWidthEnd = "MHz</strong>"
 def formatData(signal, prop):
         tuplesignal = [tuple(i.split(': ')) for i in signal]
         signaldict = dict((x, y) for x, y in tuplesignal)
-        signaldict = {k.replace(" ",""): v for k,v in signaldict.items()}
+        signaldict = {k.strip():  v for k,v in signaldict.items()}
         return signaldict[prop]
 ####################################################################################################################
 if wifidisconnected not in wifioutput:
@@ -90,7 +90,7 @@ if wifidisconnected not in wifioutput:
         else:
                 NoiseFloorStart = NoiseFloorBadStart
 ############################# This is where the text output is formatted ###########################################
-        print (RSSIGoodStart, RSSI, "dBm", FontEnd, NoiseFloorStart, NoiseFloor, "dB", FontEnd, SSIDStart, SSID, FieldEnd, BSSIDStart, BSSID, FieldEnd, TxRateStart, TxRate, "Mbps", FieldEnd, MCSStart, MCSRate, FieldEnd, ChannelStart, Channel, FieldEnd, ChWidthStart, channelwidth, ChWidthEnd)
+        # print (RSSIGoodStart, RSSI, "dBm", FontEnd, NoiseFloorStart, NoiseFloor, "dB", FontEnd, SSIDStart, SSID, FieldEnd, BSSIDStart, BSSID, FieldEnd, TxRateStart, TxRate, "Mbps", FieldEnd, MCSStart, MCSRate, FieldEnd, ChannelStart, Channel, FieldEnd, ChWidthStart, channelwidth, ChWidthEnd)
 ############################ Main if else statement #####################################################################
 else:
         print("Disconnected")
