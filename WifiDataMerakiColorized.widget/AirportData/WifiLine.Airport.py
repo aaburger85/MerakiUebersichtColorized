@@ -9,7 +9,7 @@ wifioutputnosplit = wificommand.stdout.read()
 wifioutput = wifioutputnosplit.decode('UTF-8').splitlines()
 wifidisconnected = 'AirPort: Off'
 status= ('lightgreen','yellow','red')
-props = ('agrCtlRSSI:','agrCtlNoise:','SSID:','BSSID:','lastTxRate:', 'MCS:','channel:')
+props = ('agrCtlRSSI:','agrCtlNoise:','BSSID:','SSID:','lastTxRate:', 'MCS:','channel:')
 data = []
 # format data for use ----------------------------------------------#
 def formatData(line):
@@ -19,7 +19,8 @@ def formatData(line):
                         tuplesignal = [tuple(i.split(': ')) for i in signal]
                         signaldict = dict((x, y) for x, y in tuplesignal)
                         signaldict = {k.strip():  v for k,v in signaldict.items()}
-                        return signaldict
+                        # print(signaldict) # for debug use to see values with there prop
+                        return signaldict[prop.replace(":","")]
         
 ####################################################################################################################
 if wifidisconnected not in wifioutput:
@@ -28,7 +29,7 @@ if wifidisconnected not in wifioutput:
                 if pLine != None:
                         data.append(pLine)
 
-        channelnumber = data[6]['channel']
+        channelnumber = data[6]
         Channel = channelnumber.split(',')[0]
         for line in channelnumber:
                 if re.search(r'[0-9]{1,3}\b,1$', channelnumber):
@@ -40,24 +41,22 @@ if wifidisconnected not in wifioutput:
                 else:
                         channelwidth = 20
 ############################# RSSI Coloring ########################################################################
-        RSSI = data[0]['agrCtlRSSI']
-        if RSSI <= '-67':        
+        if data[0] <= '-67':        
                 RSSIStart = status[0]
-        elif '-67'< RSSI <= '-75':
+        elif '-67'< data[0] <= '-75':
                 RSSIStart = status[1]
         else:
                 RSSIStart = status[2]
 ####################### Noise Floor Coloring #######################################################################
-        NOISE = data[1]['agrCtlNoise']
-        if NOISE >= '-90':
+        if data[1] >= '-90':
                 NoiseStatus = status[0]
-        elif '-90' > NOISE >= '-85':
+        elif '-90' > data[1] >= '-85':
                 NoiseStatus = status[1] 
         else:
                 NoiseStatus = status[2]
 ############################# This is where the text output is formatted ###########################################
         print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" 
-        % (RSSIStart, data[0]['agrCtlRSSI'], NoiseStatus, data[1]['agrCtlNoise'], data[4]['SSID'], data[3]['BSSID'], data[2]['lastTxRate'], data[5]['MCS'], channelnumber, channelwidth))
+        % (RSSIStart, data[0], NoiseStatus, data[1], data[4], data[3], data[2], data[5], channelnumber, channelwidth))
 ############################ Main if else statement #####################################################################
 else:
         print("Disconnected")
