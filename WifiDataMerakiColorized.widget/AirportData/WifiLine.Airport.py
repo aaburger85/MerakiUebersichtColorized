@@ -21,7 +21,6 @@ def formatData(line):
                         signaldict = {k.strip():  v for k,v in signaldict.items()}
                         # print(signaldict) # for debug use to see values with there prop
                         return signaldict[prop.replace(":","")]
-        
 ####################################################################################################################
 if wifidisconnected not in wifioutput:
         for line in wifioutput:
@@ -32,9 +31,7 @@ if wifidisconnected not in wifioutput:
         channelnumber = data[6]
         Channel = channelnumber.split(',')[0]
         for line in channelnumber:
-                if re.search(r'[0-9]{1,3}\b,1$', channelnumber):
-                        channelwidth = 40
-                if re.search(r'[0-9]{1,3}\b,-1$', channelnumber):
+                if re.search(r'[0-9]{1,3}\b,1$' or r'[0-9]{1,3}\b,-1$', channelnumber):
                         channelwidth = 40
                 elif re.search(r'[0-9]{1,3}\b,80$', channelnumber):
                         channelwidth = 80
@@ -57,7 +54,7 @@ if wifidisconnected not in wifioutput:
 ############################# This is where the text output is formatted ###########################################
         print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" 
         % (RSSIStart, data[0], NoiseStatus, data[1], data[4], data[3], data[2], data[5], channelnumber, channelwidth))
-############################ Main if else statement #####################################################################
+############################ Main if else statement else block ######################################################
 else:
         print("Disconnected")
 ####################################################################################################################
