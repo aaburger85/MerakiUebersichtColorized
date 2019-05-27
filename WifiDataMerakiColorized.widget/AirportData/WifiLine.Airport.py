@@ -2,114 +2,59 @@
 ######################## By Alex Burger ############################################################################
 ######################## 12-01-2018 ################################################################################
 import re
-import ast
-import json
 import subprocess
 ####################################################################################################################
 wificommand = subprocess.Popen(['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I'], stdout=subprocess.PIPE)
 wifioutputnosplit = wificommand.stdout.read()
 wifioutput = wifioutputnosplit.decode('UTF-8').splitlines()
 wifidisconnected = 'AirPort: Off'
-RSSIGoodStart = "RSSI:<strong><font color='lightgreen'>"
-RSSIOKStart = "RSSI:<strong><font color='yellow'>"
-RSSIBadStart = "RSSI:<strong><font color='red'>"
-FontEnd = "</font></strong>|"
-NoiseFloorStart = "Noise Floor:<strong>"
-NoiseFloorGoodStart = "Noise Floor:<strong><font color='lightgreen'>"
-NoiseFloorOKStart = "Noise Floor:<strong><font color='yellow'>"
-NoiseFloorBadStart = "Noise Floor:<strong><font color='red'>"
-FieldEnd = "</strong>|"
-SSIDStart = "SSID:<strong>"
-BSSIDStart = "BSSID:<strong>"
-TxRateStart = "TxRate:<strong>"
-MCSStart = "MCS:<strong>"
-ChannelStart = "Channel:<strong>"
-ChWidthStart = "Ch Width:<strong>"
-ChWidthEnd = "MHz</strong>"
+status= ('lightgreen','yellow','red')
+props = ('agrCtlRSSI:','agrCtlNoise:','BSSID:','SSID:','lastTxRate:', 'MCS:','channel:')
+data = []
+# format data for use ----------------------------------------------#
+def formatData(line):
+        for prop in props: 
+                if (prop in str(line)):
+                        signal = line,
+                        tuplesignal = [tuple(i.split(': ')) for i in signal]
+                        signaldict = dict((x, y) for x, y in tuplesignal)
+                        signaldict = {k.strip():  v for k,v in signaldict.items()}
+                        # print(signaldict) # for debug use to see values with there prop
+                        return signaldict[prop.replace(":","")]
 ####################################################################################################################
 if wifidisconnected not in wifioutput:
         for line in wifioutput:
-            if re.search(r'agrCtlRSSI', line):
-                signal = line,
-        tuplesignal = [tuple(i.split(': ')) for i in signal]
-        signaldict = dict((x, y) for x, y in tuplesignal)
-        signaldict = {k.replace(" ",""): v for k,v in signaldict.items()}
-        RSSI = signaldict['agrCtlRSSI']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'agrCtlNoise', line):
-              noise = line,
-        tuplenoise = [tuple(i.split(': ')) for i in noise]
-        noisedict = dict((x, y) for x, y in tuplenoise)
-        noisedict = {k.replace(" ",""): v for k,v in noisedict.items()}
-        NoiseFloor = noisedict['agrCtlNoise']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'\bSSID', line):
-                ssid = line,
-        tuplessid = [tuple(i.split(': ')) for i in ssid]
-        ssiddict = dict((x, y) for x, y in tuplessid)
-        ssiddict = {k.replace(" ",""): v for k,v in ssiddict.items()}
-        SSID = ssiddict['SSID']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'BSSID', line):
-                bssid = line,
-        tuplebssid = [tuple(i.split(': ')) for i in bssid]
-        bssiddict = dict((x, y) for x, y in tuplebssid)
-        bssiddict = {k.replace(" ",""): v for k,v in bssiddict.items()}
-        BSSID = bssiddict['BSSID']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'lastTxRate', line):
-                txrate = line,
-        tupletxrate = [tuple(i.split(': ')) for i in txrate]
-        txratedict = dict((x, y) for x, y in tupletxrate)
-        txratedict = {k.replace(" ",""): v for k,v in txratedict.items()}
-        TxRate = txratedict['lastTxRate']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'MCS', line):
-                MCSrate = line,
-        tupleMCSrate = [tuple(i.split(': ')) for i in MCSrate]
-        MCSratedict = dict((x, y) for x, y in tupleMCSrate)
-        MCSratedict = {k.replace(" ",""): v for k,v in MCSratedict.items()}
-        MCSRate = MCSratedict['MCS']
-####################################################################################################################
-        for line in wifioutput:
-            if re.search(r'channel', line):
-                channel = line,
-        tuplechannel = [tuple(i.split(': ')) for i in channel]
-        channeldict = dict((x, y) for x, y in tuplechannel)
-        channeldict = {k.replace(" ",""): v for k,v in channeldict.items()}
-        channelnumber = channeldict['channel']
+                pLine = formatData(line)
+                if pLine != None:
+                        data.append(pLine)
+
+        channelnumber = data[6]
         Channel = channelnumber.split(',')[0]
         for line in channelnumber:
-                if re.search(r'[0-9]{1,3}\b,1$', channelnumber):
-                        channelwidth = 40
-                if re.search(r'[0-9]{1,3}\b,-1$', channelnumber):
+                if re.search(r'[0-9]{1,3}\b,1$' or r'[0-9]{1,3}\b,-1$', channelnumber):
                         channelwidth = 40
                 elif re.search(r'[0-9]{1,3}\b,80$', channelnumber):
                         channelwidth = 80
                 else:
                         channelwidth = 20
 ############################# RSSI Coloring ########################################################################
-        if RSSI <= '-67':        
-                RSSIStart = RSSIGoodStart
-        elif '-67'< RSSI <= '-75':
-                RSSIStart = RSSIOKStart
+        if data[0] <= '-67':        
+                RSSIStart = status[0]
+        elif '-67'< data[0] <= '-75':
+                RSSIStart = status[1]
         else:
-                RSSIStart = RSSIBadStart
+                RSSIStart = status[2]
 ####################### Noise Floor Coloring #######################################################################
-        if NoiseFloor >= '-90':
-                NoiseFloorStart = NoiseFloorGoodStart
-        elif '-90' > NoiseFloor >= '-85':
-                NoiseFloorStart = NoiseFloorOKStart 
+        if data[1] >= '-90':
+                NoiseStatus = status[0]
+        elif '-90' > data[1] >= '-85':
+                NoiseStatus = status[1] 
         else:
-                NoiseFloorStart = NoiseFloorBadStart
+                NoiseStatus = status[2]
 ############################# This is where the text output is formatted ###########################################
-        print (RSSIGoodStart, RSSI, "dBm", FontEnd, NoiseFloorStart, NoiseFloor, "dB", FontEnd, SSIDStart, SSID, FieldEnd, BSSIDStart, BSSID, FieldEnd, TxRateStart, TxRate, "Mbps", FieldEnd, MCSStart, MCSRate, FieldEnd, ChannelStart, Channel, FieldEnd, ChWidthStart, channelwidth, ChWidthEnd)
-####################################################################################################################
+        print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" 
+        % (RSSIStart, data[0], NoiseStatus, data[1], data[4], data[3], data[2], data[5], channelnumber, channelwidth))
+############################ Main if else statement else block ######################################################
 else:
         print("Disconnected")
 ####################################################################################################################

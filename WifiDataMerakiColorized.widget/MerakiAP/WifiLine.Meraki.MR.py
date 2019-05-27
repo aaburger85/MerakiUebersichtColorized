@@ -1,21 +1,14 @@
 ######################## Meraki MR script to display Connectivity Data  ############################################
 ######################## By Alex Burger ############################################################################
 ######################## 12-01-2018 ################################################################################
-import re
 import urllib.request
-import ast
 import json
 
-APNameStart = "AP Name:<strong>"
-FieldEnd = "</strong>|"
-APIPStart = "AP IP:<strong>"
-APModelStart = "AP Model:<strong>"
-SNRGoodStart = "SNR at AP:<strong><font color=lightgreen>"
-SNROKStart = "SNR at AP:<strong><font color='yellow'>"
-SNRBadStart = "SNR at AP:<strong><font color='red'>"
-SNREnd = "</font></strong>|"
-APNetworkStart = "Meraki Network:<strong>"
-EndLine = "</strong>"
+status = ('lightgreen', 'yellow', 'red')
+
+def printData(MerakiAP,MerakiAPIP,MerakiModel,status,SignaldB,MerakiNetwork):
+        print("AP Name:<strong> %s </strong>| AP IP:<strong> %s </strong>| AP Model:<strong> %s </strong>| SNR at AP:<strong><font color=%s> %s dB </font></strong>| Meraki Network:<strong> %s </strong>" 
+        % (MerakiAP,MerakiAPIP,MerakiModel,status,SignaldB,MerakiNetwork))
 
 ########################### Meraki AP Detection and Info ###########################################################
 try:  
@@ -26,16 +19,17 @@ try:
                 MerakiNetwork = merakiapjson['config']['network_name']
                 MerakiAP = merakiapjson['config']['node_name']
                 MerakiModel = merakiapjson['config']['product_model']
+                
                 try:
                         MerakiAPIP = merakiapjson['connection_state']['wired_ip']
                 except:
                         MerakiAPIP = "No IP(Mesh)"
                 if SignaldB >= '29':
-                        print (APNameStart, MerakiAP, FieldEnd, APIPStart, MerakiAPIP, FieldEnd, APModelStart, MerakiModel, FieldEnd,  SNRGoodStart, SignaldB,"dB",SNREnd, APNetworkStart, MerakiNetwork, EndLine)
+                        printData(MerakiAP,MerakiAPIP,MerakiModel,status[0],SignaldB,MerakiNetwork)
                 elif '19' <= SignaldB < '29':
-                        print (APNameStart, MerakiAP, FieldEnd, APIPStart, MerakiAPIP, FieldEnd, APModelStart, MerakiModel, FieldEnd,  SNROKStart, SignaldB,"dB",SNREnd, APNetworkStart, MerakiNetwork, EndLine)
+                        printData(MerakiAP,MerakiAPIP,MerakiModel,status[1],SignaldB,MerakiNetwork)
                 else:
-                        print (APNameStart, MerakiAP, FieldEnd, APIPStart, MerakiAPIP, FieldEnd, APModelStart, MerakiModel, FieldEnd,  SNRBadStart, SignaldB,"dB",SNREnd, APNetworkStart, MerakiNetwork, EndLine)
+                        printData(MerakiAP,MerakiAPIP,MerakiModel,status[2],SignaldB,MerakiNetwork)
         else:
                 print("Not Connected to an MR")
 except:
