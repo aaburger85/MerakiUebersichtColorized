@@ -11,10 +11,9 @@ Displays connectivity data for any Meraki APs, Switches, or Firewalls that you a
 Requirements:
 1. Download and install Uebersicht - [Ubersicht Webpage](http://tracesof.net/uebersicht/)
 2. Install Python3 - [Python3 for Mac](https://www.python.org/downloads/mac-osx/)
-
-    Using homebrew
+     Or Using homebrew
     ```sh
-        brew install Python3
+        $ brew install Python3
     ```
 3. download the WifiDataMerakiColorized.widget.zip file in the repo
 4. extract to your ubersicht widgets folder
