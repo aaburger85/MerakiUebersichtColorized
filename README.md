@@ -11,7 +11,7 @@ Displays connectivity data for any Meraki APs, Switches, or Firewalls that you a
 Requirements:
 1. Download and install Uebersicht - [Ubersicht Webpage](http://tracesof.net/uebersicht/)
 2. Install Python3 - [Python3 for Mac](https://www.python.org/downloads/mac-osx/)
-     Or Using homebrew
+     Or Using [homebrew](https://brew.sh/)
     ```sh
         $ brew install Python3
     ```
