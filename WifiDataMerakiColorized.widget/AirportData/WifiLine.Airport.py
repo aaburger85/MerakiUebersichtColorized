@@ -1,8 +1,10 @@
 ######################## Airport subprocess script to display Wifi Data ############################################
 ######################## By Alex Burger ############################################################################
 ######################## 12-01-2018 ################################################################################
+######################## Refactored By Max Burger ############################################################################
 import re
 import subprocess
+import json
 ####################################################################################################################
 wificommand = subprocess.Popen(['/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport', '-I'], stdout=subprocess.PIPE)
 wifioutputnosplit = wificommand.stdout.read()
@@ -16,13 +18,14 @@ def formatData(line):
     for prop in props: 
         if prop in str(line):
             signal = line,
-            tuplesignal = [tuple(i.split(': ')) for i in signal]
+            tuplesignal = [tuple(i.split(':')) for i in signal]
             signaldict = dict((x, y) for x, y in tuplesignal)
             signaldict = {k.strip():  v for k,v in signaldict.items()}
-            # print(signaldict) # for debug use to see values with there prop
+        #     print(signaldict) # for debug use to see values with there prop
             return signaldict[prop.replace(":","")]
 ####################################################################################################################
 if wifidisconnected not in wifioutput:
+#     print(wifioutput)
     for line in wifioutput:
         pLine = formatData(line)
         if pLine != None:
@@ -51,10 +54,22 @@ if wifidisconnected not in wifioutput:
             NoiseStatus = status[1] 
     else:
             NoiseStatus = status[2]
-############################# This is where the text output is formatted ###########################################
-    print("RSSI:<strong><font color='%s'> %s dBm </font></strong>| Noise Floor:<strong><font color='%s'> %s dB </font></strong>| SSID:<strong> %s </strong>| BSSID:<strong> %s </strong>| TxRate:<strong> %s </strong>| MCS:<strong> %s </strong>| Channel:<strong> %s </strong>| Ch Width:<strong> %s MHz</strong>" 
-        % (RSSIStart, data[0], NoiseStatus, data[1], data[4], data[3], data[2], data[5], channelnumber, channelwidth))
+############################# This is where the text output is formatted in JSON for React ###########################################
+    aiport_data = {
+        "RSSI": f'{data[0]} dBm',
+        "RSSI_Status": RSSIStart,
+        "Noise_Floor": f'{data[1]} dB',
+        "Noise_Floor_Status": NoiseStatus,
+        "SSID": f'{data[4]}',
+        "BSSID": f'{data[3]}',
+        "TxRate": f'{data[2]}',
+        "MCS": f'{data[5]}',
+        "Channel": f'{channelnumber}',
+        "Ch_Width": f'{channelwidth}'
+     }
+    print(json.dumps(aiport_data))
+    
 ############################ Main if else statement else block ######################################################
 else:
-    print("Disconnected")
+    print(json.dumps({"message":"Disconnected"}))
 ####################################################################################################################
