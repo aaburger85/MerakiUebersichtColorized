@@ -1,4 +1,5 @@
-// this is the shell command that gets executed every time this widget refreshes
+// this is the shell command that gets executed every time this widget refreshes 
+// a user could have python installed anywhere so we query for its location
 export const command = "$(which python3) ./WifiDataMerakiColorized.widget/AirportData/WifiLine.Airport.py";
 // the refresh frequency in milliseconds
 export const refreshFrequency = 1000;
