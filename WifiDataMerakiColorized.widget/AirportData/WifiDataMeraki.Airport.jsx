@@ -5,7 +5,6 @@ export const refreshFrequency = 1000;
 
 export const className =`
 	color: #fff;
-	top: 70px;
 	font-family: sans-serfi, helvetica, arial;
 	text-align: justify;
 	background-color: rgba(0, 0, 0, 0.6);
